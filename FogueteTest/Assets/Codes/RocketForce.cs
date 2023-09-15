@@ -51,17 +51,21 @@ public class RocketForce : MonoBehaviour
 
     private void DetectMaxHeight()
     {
-        if(_body.velocity.y <= 0)
+        if(_stages[_stages.Length-1] == null)
         {
-            if(transform.position.y > _maxHeight)
+            if (_body.velocity.y <= 0)
             {
-                _maxHeight = transform.position.y;
+                if (transform.position.y > _maxHeight)
+                {
+                    _maxHeight = transform.position.y;
 
-                Debug.Log(_maxHeight);
+                    Debug.Log(_maxHeight);
 
-                OpenParachute();
+                    OpenParachute();
+                }
             }
         }
+        
     }
 
     private void OpenParachute()
