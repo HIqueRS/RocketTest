@@ -103,6 +103,8 @@ public class RocketForce : MonoBehaviour
             DetachStage(_currentStage);
             _currentStage++;
             _seconds = 0;
+
+            _stages[_currentStage].transform.GetChild(0).gameObject.SetActive(true);
         }
         else
         {
@@ -124,6 +126,10 @@ public class RocketForce : MonoBehaviour
             _stageBody.velocity = _body.velocity * 0.9f;
 
             _body.mass -= 1;
+
+
+            _stages[i].transform.GetChild(0).gameObject.SetActive(false);
+            
 
             _stages[i] = null;
         }
