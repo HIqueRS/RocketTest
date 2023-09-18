@@ -36,6 +36,8 @@ public class RocketForce : MonoBehaviour
         _currentStage = 0;
 
         _stagesC[_currentStage].InitializeStage();
+
+        
     }
 
     // Update is called once per frame
@@ -83,7 +85,7 @@ public class RocketForce : MonoBehaviour
 
     private void AddingForce()
     {
-        _body.AddForce(Vector3.up * _force);
+        _body.AddRelativeForce(Vector3.up * _force);
     }
 
     private void TestFuel()
