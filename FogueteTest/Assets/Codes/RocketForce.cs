@@ -51,7 +51,7 @@ public class RocketForce : MonoBehaviour
 
     private void DetectMaxHeight()
     {
-        if(_stages[_stages.Length-1] == null)
+        if(_stages[_stages.Length-1] == null)//vai ter que mudar
         {
             if (_body.velocity.y <= 0)
             {
