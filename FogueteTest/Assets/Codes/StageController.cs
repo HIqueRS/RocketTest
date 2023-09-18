@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class StageController : MonoBehaviour
 {
+    [SerializeField]
     private float _fuel;
     [SerializeField]
     private AudioSource _sound;
 
-    private float _seconds;
+    
 
     [SerializeField]
     private GameObject _particle;
@@ -28,15 +29,11 @@ public class StageController : MonoBehaviour
     {
         if(_initiate)
         {
-            PassTime();
             UsingFuel();
         }
     }
 
-    private void PassTime()
-    {
-        _seconds += Time.deltaTime;
-    }
+    
 
     public float GetFuel()
     {
@@ -45,9 +42,9 @@ public class StageController : MonoBehaviour
 
     private void UsingFuel()
     {
-        if(_fuel >= 0 )
+        if(_fuel > 0 )
         {
-            _fuel -= _seconds;
+            _fuel -= Time.deltaTime;
         }
     }
 

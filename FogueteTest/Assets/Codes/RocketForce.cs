@@ -9,7 +9,7 @@ public class RocketForce : MonoBehaviour
     [SerializeField]
     private float _force;
 
-    private float _seconds;
+   
 
     [SerializeField]
     private float _timeLimit;
@@ -22,36 +22,41 @@ public class RocketForce : MonoBehaviour
     [SerializeField]
     private GameObject _parachute;
 
-    [SerializeField]
-    private GameObject[] _stages;
-
     private int _currentStage;
+
+    [SerializeField]
+    private StageController[] _stagesC;
     
     // Start is called before the first frame update
     void Start()
     {
         _body = GetComponent<Rigidbody>();
-        _seconds = 0;
+        
         _maxHeight = 0;
         _currentStage = 0;
+
+        _stagesC[_currentStage].InitializeStage();
     }
 
     // Update is called once per frame
     void Update()
     {
-        PassTime();
+       
         DetectMaxHeight();
     }
 
     private void FixedUpdate()
     {
-
-        TestFuel();
+        if(_stagesC[_stagesC.Length - 1] != null)
+        {
+            TestFuel();
+        }
+        
     }
 
     private void DetectMaxHeight()
     {
-        if(_stages[_stages.Length-1] == null)//vai ter que mudar
+        if(_stagesC[_stagesC.Length-1] == null)
         {
             if (_body.velocity.y <= 0)
             {
@@ -74,10 +79,7 @@ public class RocketForce : MonoBehaviour
         _body.drag = _dragForce;
     }
 
-    private void PassTime()
-    {
-        _seconds += Time.deltaTime;
-    }
+   
 
     private void AddingForce()
     {
@@ -86,7 +88,8 @@ public class RocketForce : MonoBehaviour
 
     private void TestFuel()
     {
-        if (_seconds < _timeLimit)
+
+        if(_stagesC[_currentStage].GetFuel() > 0)
         {
             AddingForce();
         }
@@ -94,44 +97,42 @@ public class RocketForce : MonoBehaviour
         {
             TestToDetachStage();
         }
+
+        
     }
 
     private void TestToDetachStage()
     {
-        if(_currentStage < _stages.Length -1)
+        if(_currentStage < _stagesC.Length -1)
         {
-            DetachStage(_currentStage);
-            _currentStage++;
-            _seconds = 0;
+            DetachStage();
 
-            _stages[_currentStage].transform.GetChild(0).gameObject.SetActive(true);
+            NextStage();
         }
         else
         {
-            DetachStage(_currentStage);
-           
-           
+            DetachStage();
+
+
         }
+        
     }
 
-    private void DetachStage(int i)
+    private void NextStage()
     {
-        if(_stages[i] != null)
-        {
-            Rigidbody _stageBody;
+        _currentStage++;
 
-            _stages[i].transform.SetParent(null);
-            _stageBody = _stages[i].AddComponent<Rigidbody>(); 
-            _stageBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            _stageBody.velocity = _body.velocity * 0.9f;
-
-            _body.mass -= 1;
-
-
-            _stages[i].transform.GetChild(0).gameObject.SetActive(false);
-            
-
-            _stages[i] = null;
-        }
+        _stagesC[_currentStage].InitializeStage();
     }
+
+    private void DetachStage()
+    {
+        _stagesC[_currentStage].DetachStage(_body.velocity);
+
+        _stagesC[_currentStage] = null;
+
+        _body.mass -= 1;
+    }
+
+    
 }
